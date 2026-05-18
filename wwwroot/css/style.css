@@ -1,0 +1,58 @@
+body {
+    background-color: #121212;
+    color: #FFFFFF;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Verdana, sans-serif;
+}
+
+.navbar {
+    background-color: #000000;
+}
+
+.navbar-brand {
+    color: #1DB954;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: #B3B3B3;
+}
+
+.nav-link:hover {
+    color: #FFFFFF;
+}
+
+
+.btn-musicfy {
+    background-color: #1DB954;
+    color: black;
+    border-radius: 50px;
+    font-weight: bold;
+    border: none;
+}
+
+.btn-musicfy:hover {
+    background-color: #1ed760;
+    color: black;
+    transform: scale(1.05);
+    transition: 0.2s;
+}
+
+.card {
+    background-color: #181818;
+    border: none;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.card:hover {
+    background-color: #282828;
+}
+
+.card-title {
+    color: white;
+}
+
+.card-text {
+    color: #B3B3B3;
+}

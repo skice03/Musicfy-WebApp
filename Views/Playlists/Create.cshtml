@@ -1,0 +1,40 @@
+@model MusicfyWebApp.Models.Playlist
+@{
+    ViewData["Title"] = "Create Playlist";
+}
+
+<div class="container mt-4 text-white">
+    <h1>Create New Playlist</h1>
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <form asp-action="Create">
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Playlist Title</label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary"
+                           placeholder="ex: Summer Vibes" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="2"
+                              placeholder="Scurtă descriere..."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageUrl" class="form-label">Cover URL</label>
+                    <input asp-for="ImageUrl" class="form-control bg-dark text-white border-secondary"
+                           placeholder="ex: /images/cover.jpg" />
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" asp-for="IsPublic" />
+                    <label class="form-check-label" asp-for="IsPublic">Make this playlist public?</label>
+                </div>
+
+                <button type="submit" class="btn btn-success px-4">Save</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Go Back</a>
+            </form>
+        </div>
+    </div>
+</div>

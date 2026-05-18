@@ -1,0 +1,77 @@
+@model MusicfyWebApp.Models.Artist
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container mt-5">
+    <a asp-action="Index" class="text-secondary text-decoration-none mb-4 d-inline-block">&larr; Back to Artists</a>
+
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-3 text-center mb-4 mb-md-0">
+            <img src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "https://via.placeholder.com/250")"
+                 class="rounded-circle shadow" style="width: 250px; height: 250px; object-fit: cover;"
+                 alt="@Model.Name Profile Picture">
+        </div>
+        <div class="col-md-9">
+            <h6 class="text-uppercase mb-2" style="color: #1DB954; font-weight: 600; letter-spacing: 2px;">Verified
+                Artist</h6>
+                <h1 class="display-3 fw-bold mb-3" style="color: white;">@Model.Name</h1>
+            
+                <p class="lead" style="color: #B3B3B3;">
+                    @(string.IsNullOrEmpty(Model.Bio) ? "This artist doesn't have a bio." : Model.Bio)
+                </p>
+            
+                <div class="mt-4">
+                    <button class="btn btn-success px-4 py-2 me-2"
+                            style="border-radius: 50px; font-weight: bold;">Play</button>
+                    <button class="btn btn-outline-light px-4 py-2" style="border-radius: 50px;">Follow</button>
+                
+                    <a asp-action="Edit" asp-route-id="@Model.ArtistId" class="btn btn-link text-secondary ms-3">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@Model.ArtistId" class="btn btn-link text-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    
+        <hr style="border-color: #282828; margin-bottom: 40px;">
+    
+        <h3 class="mb-4 text-white" style="font-weight: 600;">Popular Releases</h3>
+    
+        <table class="table table-dark table-hover mt-3" style="background-color: transparent;">
+            <thead>
+                <tr style="border-bottom: 2px solid #282828;">
+                    <th class="text-secondary pb-3">#</th>
+                    <th class="text-secondary pb-3">Title</th>
+                    <th class="text-secondary pb-3">Album</th>
+                    <th class="text-secondary pb-3">Length</th>
+                    <th class="text-secondary pb-3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int index = 1;
+                }
+            
+                @if (Model.Songs != null && Model.Songs.Any())
+                {
+                    @foreach (var song in Model.Songs)
+                    {
+                        <tr>
+                            <td class="pt-3 text-secondary">@(index++)</td>
+                            <td class="pt-3 fw-bold text-white">@song.Title</td>
+                            <td class="pt-3" style="color: #1DB954;">@(song.Album != null ? song.Album.Title : "Single")</td>
+                            <td class="pt-3" style="color: #B3B3B3;">@song.Length</td>
+                            <td><button class="btn btn-sm btn-outline-light" style="border-radius: 50px;">Play</button></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-secondary py-4">Currently there are no songs from this artist.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

@@ -1,0 +1,47 @@
+@model MusicfyWebApp.Models.Song
+
+@{
+    ViewData["Title"] = "Editing Song";
+}
+
+<div class="container mt-4 text-white">
+    <h1 class="mb-4">Edit song details</h1>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="SongId" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="Title" class="control-label mb-1">Title</label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label asp-for="Length" class="control-label mb-1">Length</label>
+                    <input asp-for="Length" class="form-control bg-dark text-white border-secondary" />
+                    <span asp-validation-for="Length" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="AudioUrl" class="control-label mb-1">Audio URL</label>
+                    <input asp-for="AudioUrl" class="form-control bg-dark text-white border-secondary" />
+                </div>
+
+                <div class="form-group mb-4">
+                    <label asp-for="AlbumId" class="control-label mb-1">Album</label>
+                    <select asp-for="AlbumId" class="form-control bg-dark text-white border-secondary"
+                            asp-items="ViewBag.AlbumId"></select>
+                    <span asp-validation-for="AlbumId" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Update</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Go back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+@model IEnumerable<MusicfyWebApp.Models.Artist>
+@{
+    ViewData["Title"] = "Artists";
+}
+
+<div class="container mt-5 text-white">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>All Artists</h2>
+        <a asp-action="Create" class="btn btn-success fw-bold" style="border-radius: 50px; padding: 8px 24px;">+ Add
+            artist</a>
+        </div>
+
+        <div class="row mt-4">
+        
+            <div class="col-md-3 mb-4 text-center">
+                <a asp-action="Default" class="text-decoration-none">
+                    <div class="card bg-transparent border-0 shadow-hover p-3" style="transition: 0.3s;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Travis_Scott_February_2016.jpg/960px-Travis_Scott_February_2016.jpg"
+                             class="rounded-circle shadow mx-auto mb-3"
+                             style="width: 180px; height: 180px; object-fit: cover;" alt="Travis Scott">
+                        <h5 class="text-white fw-bold mb-1">Travis Scott</h5>
+                        <p class="text-secondary small" style="color: #1DB954 !important;">Verified Artist</p>
+                    </div>
+                </a>
+            </div>
+
+            @if (Model != null)
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="col-md-3 mb-4 text-center">
+                        <a asp-action="Details" asp-route-id="@item.ArtistId" class="text-decoration-none">
+                            <div class="card bg-transparent border-0 shadow-hover p-3" style="transition: 0.3s;">
+                            
+                                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" class="rounded-circle shadow mx-auto mb-3"
+                                         style="width: 180px; height: 180px; object-fit: cover;" alt="@item.Name">
+                                }
+                                else
+                                {
+                                    <div class="bg-secondary rounded-circle shadow mx-auto mb-3 d-flex align-items-center justify-content-center"
+                                         style="width: 180px; height: 180px;">
+                                        <span class="fs-1 text-white-50">👤</span>
+                                    </div>
+                                }
+
+                                <h5 class="text-white fw-bold mb-1">@item.Name</h5>
+                                <p class="text-secondary small">Artist</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            }
+        
+        </div>
+    </div>
+
+    <style>
+        .shadow-hover:hover {
+            background-color: #282828 !important;
+            border-radius: 10px;
+            transform: translateY(-5px);
+        }
+    </style>

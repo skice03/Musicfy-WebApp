@@ -1,0 +1,31 @@
+@model MusicfyWebApp.Models.Song
+
+@{
+    ViewData["Title"] = "Song Details";
+}
+
+<div class="container mt-4 text-white">
+    <h1>Song details</h1>
+    <hr class="border-secondary" />
+    
+    <dl class="row mt-4">
+        <dt class="col-sm-3 text-secondary">Title</dt>
+        <dd class="col-sm-9 fs-5">@Model.Title</dd>
+        
+        <dt class="col-sm-3 text-secondary">Length</dt>
+        <dd class="col-sm-9">@Model.Length</dd>
+
+        <dt class="col-sm-3 text-secondary">Audio file / source</dt>
+        <dd class="col-sm-9 text-info">@(string.IsNullOrEmpty(Model.AudioUrl) ? "No file" : Model.AudioUrl)</dd>
+        
+        <dt class="col-sm-3 text-secondary">From album</dt>
+        <dd class="col-sm-9 text-success">
+            @(Model.Album?.Title ?? "No album")
+        </dd>
+    </dl>
+
+    <div class="mt-4">
+        <a asp-action="Edit" asp-route-id="@Model?.SongId" class="btn btn-outline-light">Edit</a>
+        <a asp-action="Index" class="btn btn-outline-secondary ms-2">Go back</a>
+    </div>
+</div>

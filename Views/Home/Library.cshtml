@@ -1,0 +1,90 @@
+@{
+    ViewData["Title"] = "Library";
+}
+
+<div class="container mt-5 text-white">
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+        <div class="d-flex align-items-center">
+            <h2 class="mb-0 me-3">My Library</h2>
+            <span class="text-secondary small">4 Items</span>
+        </div>
+        
+        <div>
+            <a asp-controller="Albums" asp-action="Index" class="btn btn-sm btn-outline-secondary me-2">Show all albums</a>
+            <a asp-controller="Playlists" asp-action="Index" class="btn btn-sm btn-outline-secondary me-4">Show all playlists</a>
+            
+            <a asp-controller="Albums" asp-action="Create" class="btn btn-sm btn-success fw-bold me-2">+ Album</a>
+            <a asp-controller="Playlists" asp-action="Create" class="btn btn-sm btn-success fw-bold">+ Playlist</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
+                <div class="position-absolute top-0 end-0 m-3">
+                    <span class="badge rounded-pill bg-success" style="font-size: 0.6rem;">SINGLE</span>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/en/5/51/Kendrick_Lamar_-_Damn.png" 
+                     class="card-img-top rounded shadow" alt="HUMBLE">
+                <div class="card-body px-0 pb-0 mt-2">
+                    <h5 class="card-title mb-1 text-truncate">HUMBLE.</h5>
+                    <p class="card-text text-secondary">Kendrick Lamar</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
+                <div class="position-absolute top-0 end-0 m-3">
+                    <span class="badge rounded-pill bg-primary" style="font-size: 0.6rem;">ALBUM</span>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/en/9/90/Scorpion_by_Drake.jpg" 
+                     class="card-img-top rounded shadow" alt="Scorpion">
+                <div class="card-body px-0 pb-0 mt-2">
+                    <h5 class="card-title mb-1 text-truncate">Scorpion</h5>
+                    <p class="card-text text-secondary">25 Tracks • Drake</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
+                <div class="position-absolute top-0 end-0 m-3">
+                    <span class="badge rounded-pill bg-success" style="font-size: 0.6rem;">SINGLE</span>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/en/8/88/Rae_Sremmurd_%E2%80%93_Black_Beatles.jpg" 
+                     class="card-img-top rounded shadow" alt="Black Beatles">
+                <div class="card-body px-0 pb-0 mt-2">
+                    <h5 class="card-title mb-1 text-truncate">Black Beatles</h5>
+                    <p class="card-text text-secondary">Rae Sremmurd</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-4">
+            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
+                <div class="position-absolute top-0 end-0 m-3">
+                    <span class="badge rounded-pill bg-primary" style="font-size: 0.6rem;">ALBUM</span>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/en/2/29/DS2_by_Future.jpg" 
+                     class="card-img-top rounded shadow" alt="DS2">
+                <div class="card-body px-0 pb-0 mt-2">
+                    <h5 class="card-title mb-1 text-truncate">DS2</h5>
+                    <p class="card-text text-secondary">13 Tracks • Future</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .shadow-hover { transition: all 0.2s ease-in-out; border: 1px solid #333; }
+    .shadow-hover:hover {
+        transform: scale(1.02);
+        background-color: #282828 !important;
+        border-color: #1DB954 !important;
+    }
+    .card-img-top { aspect-ratio: 1 / 1; object-fit: cover; }
+    .card-title { font-size: 0.9rem; font-weight: 600; color: white; }
+    .card-text { font-size: 0.8rem; }
+</style>

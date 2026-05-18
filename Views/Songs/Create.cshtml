@@ -1,0 +1,60 @@
+@model MusicfyWebApp.Models.Song
+
+@{
+    ViewData["Title"] = "Upload Song";
+}
+
+<div class="container mt-5 text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Upload a new song to your library</h2>
+            
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Song Title</label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary"
+                           placeholder="ex: STARBOY">
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="ArtistId" class="form-label">Select Artist <span
+                            class="text-danger">*</span></label>
+                            <select asp-for="ArtistId" class="form-control bg-dark text-white border-secondary"
+                                    asp-items="ViewBag.ArtistId">
+                                <option value="">Choose an Artist</option>
+                            </select>
+                            <span asp-validation-for="ArtistId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Length" class="form-label">Length</label>
+                            <input asp-for="Length" class="form-control bg-dark text-white border-secondary"
+                                   placeholder="ex: 3:50">
+                                <span asp-validation-for="Length" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label asp-for="AudioUrl" class="form-label">Audio File URL / Path</label>
+                                <input asp-for="AudioUrl" class="form-control bg-dark text-white border-secondary"
+                                       placeholder="/audio/song.mp3">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="AlbumId" class="form-label">Select Album</label>
+                                    <select asp-for="AlbumId" class="form-control bg-dark text-white border-secondary"
+                                            asp-items="ViewBag.AlbumId">
+                                        <option value="">Choose an album</option>
+                                    </select>
+                                    <span asp-validation-for="AlbumId" class="text-danger"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-success w-100 mt-3"
+                                        style="background-color: #1DB954; border: none; font-weight: 600;">Upload track</button>
+                                <div class="text-center mt-3">
+                                    <a asp-action="Index" class="text-secondary text-decoration-none">Back to library</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>

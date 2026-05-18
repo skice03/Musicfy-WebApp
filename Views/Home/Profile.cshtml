@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Profile";
+}
+<div class="container mt-5">
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-auto text-center text-md-start mb-3 mb-md-0">
+            <img src="~/resources/pfp.jpg" class="rounded-circle shadow"
+                 style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture">
+            </div>
+            <div class="col-md">
+                <p class="text-uppercase mb-1" style="color: #B3B3B3; font-weight: 600; letter-spacing: 1px;">User Profile
+                </p>
+                <h1 class="display-4 fw-bold mb-2" style="color: white;">Student</h1>
+                <p class="lead" style="color: #1DB954; font-weight: 600;">2 Public Playlists • 20 Followers</p>
+            </div>
+        </div>
+        <hr style="border-color: #282828; margin-bottom: 40px;">
+        <div class="row">
+            <div class="col-md-5 mb-5 mb-md-0">
+                <h3 class="mb-4" style="font-weight: 600;">Account Settings</h3>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary">Display Name</label>
+                        <input type="text" class="form-control bg-dark text-white border-secondary" value="Student">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary">Email</label>
+                        <input type="email" class="form-control bg-dark text-white border-secondary"
+                               value="user@student.ucv.ro">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-secondary">Change Password</label>
+                        <input type="password" class="form-control bg-dark text-white border-secondary"
+                               placeholder="Enter your new password...">
+                    </div>
+                    <button type="submit" class="btn btn-musicfy px-4 py-2">Update Settings</button>
+                </form>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-6">
+                <h3 class="mb-4" style="font-weight: 600;">My Playlists</h3>
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action bg-dark border-secondary mb-3 rounded p-3"
+                           style="transition: 0.3s;">
+                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                            <h5 class="mb-0 fw-bold" style="color: #1DB954;">Liked Songs</h5>
+                            <span class="badge rounded-pill" style="background-color: #1DB954; color: black;">255
+                                songs</span>
+                            </div>
+                            <small class="text-secondary">All songs you've liked.</small>
+                        </a>
+                        <a href="#"
+                               class="list-group-item list-group-item-action bg-dark text-white border-secondary mb-3 rounded p-3"
+                               style="transition: 0.3s;">
+                            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                <h5 class="mb-0 fw-bold">Workout Mix</h5>
+                                <span class="badge bg-secondary rounded-pill">89 songs</span>
+                            </div>
+                            <small class="text-secondary">Gym Playlist.</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>

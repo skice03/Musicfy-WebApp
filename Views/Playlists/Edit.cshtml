@@ -1,0 +1,40 @@
+@model MusicfyWebApp.Models.Playlist
+@{
+    ViewData["Title"] = "Edit Playlist";
+}
+
+<div class="container mt-4 text-white">
+    <h1 class="mb-4">Edit Playlist</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit">
+                <input type="hidden" asp-for="PlaylistId" />
+                
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Playlist Title</label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Description" class="form-label">Description</label>
+                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary"
+                              rows="2"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageUrl" class="form-label">URL Cover</label>
+                    <input asp-for="ImageUrl" class="form-control bg-dark text-white border-secondary" />
+                </div>
+                
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" asp-for="IsPublic" />
+                    <label class="form-check-label" asp-for="IsPublic">Public Playlist</label>
+                </div>
+
+                <button type="submit" class="btn btn-primary px-4">Update</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Go back</a>
+            </form>
+        </div>
+    </div>
+</div>

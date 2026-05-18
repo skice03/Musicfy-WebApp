@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container mt-5">
+    <div class="row align-items-center mb-5">
+        <div class="col-md-8">
+            <h1 class="display-4 fw-bold mb-3">Welcome to Musicfy!</h1>
+            <p class="lead text-secondary">Your personal music library manager. Organize your favorite artists, tracks,
+                and playlists in one place.</p>
+                <div class="mt-4">
+                    <a asp-controller="Home" asp-action="Library" class="btn btn-musicfy px-4 py-2 me-2">Explore Library</a>
+                    <a asp-controller="Songs" asp-action="Create" class="btn btn-outline-light px-4 py-2">Upload Track</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-4 mb-4">
+                <div class="card p-4 border-secondary bg-dark h-100 shadow-sm">
+                    <h3 class="text-success fw-bold">10+</h3>
+                    <p class="text-secondary mb-0">Tracks in your collection</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card p-4 border-secondary bg-dark h-100 shadow-sm">
+                    <h3 class="text-success fw-bold">Artists</h3>
+                    <p class="text-secondary mb-0">Verified profiles available</p>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card p-4 border-secondary bg-dark h-100 shadow-sm">
+                    <h3 class="text-success fw-bold">Secure</h3>
+                    <p class="text-secondary mb-0">Your library is saved forever</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <h4 class="mb-4 fw-bold">What's New</h4>
+                <div class="list-group list-group-flush">
+            
+                    <div class="list-group-item bg-transparent border-secondary text-white px-0 py-3">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-success">Easier Library Management</h6>
+                            <span class="badge bg-success rounded-pill" style="font-size: 0.7rem;">NEW</span>
+                        </div>
+                        <p class="mb-1 text-secondary small">
+                            You can now create and edit your playlists and albums straight from your Library. It's faster
+                            and much simpler to use!
+                        </p>
+                    </div>
+
+                    <div class="list-group-item bg-transparent border-secondary text-white px-0 py-3">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-success">Instant Song Search</h6>
+                            <small class="text-secondary">Updated</small>
+                        </div>
+                        <p class="mb-1 text-secondary small">
+                            Looking for a specific track? Just type its name and the list updates instantly — no more
+                            waiting for the page to load.
+                        </p>
+                    </div>
+
+                    <div class="list-group-item bg-transparent border-secondary text-white px-0 py-3">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1 text-success">Singles & Artist Pages</h6>
+                            <small class="text-secondary">Updated</small>
+                        </div>
+                        <p class="mb-1 text-secondary small">
+                            You can now upload standalone songs (Singles) and see all of an artist's music nicely organized
+                            on their own page.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>

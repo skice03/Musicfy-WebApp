@@ -1,0 +1,102 @@
+@model IEnumerable<MusicfyWebApp.Models.Song>
+
+@{
+    ViewData["Title"] = "Your Songs";
+}
+
+<div class="container mt-5 text-white">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Your Songs</h2>
+        <input type="text" id="searchBox" class="form-control bg-dark text-white border-secondary w-25"
+               placeholder="Search for a song..." />
+    </div>
+
+    <table class="table table-dark table-hover mt-4 align-middle">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Artist</th>
+                <th>Length</th>
+                <th>Album</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="songsTableBody">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="fw-bold text-white">@item.Title</td>
+                    <td class="text-light">
+                        @(item.Artist != null ? item.Artist.Name : "Unknown Artist")
+                    </td>
+                    <td>@item.Length</td>
+                    <td style="color: #1DB954;">
+                        @(item.Album != null ? item.Album.Title : "Single")
+                    </td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-success me-2">Play</button>
+                        <a asp-action="Edit" asp-route-id="@item.SongId"
+                           class="text-secondary text-decoration-none me-2 small">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@item.SongId"
+                           class="text-danger text-decoration-none small">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            
+        var originalTableContent = $("#songsTableBody").html();
+
+        $("#searchBox").on("keyup", function () {
+        var term = $(this).val().trim();
+
+        // fixed here to reload list if search bar is empyty
+        if (term === "") {
+        $("#songsTableBody").html(originalTableContent);
+        return;
+        }
+
+        // ajax search for text
+        $.ajax({
+        url: '/Songs/Search',
+        type: 'GET',
+        data: { searchTerm: term },
+        success: function (songs) {
+        $("#songsTableBody").empty();
+                        
+        if (songs.length === 0) {
+        $("#songsTableBody").append('<tr><td colspan="4" class="text-center text-muted py-4">Unable to find any song.</td></tr>');
+        return;
+        }
+                        
+        $.each(songs, function (index, song) {
+        var albumDisplay = song.album ? song.album.title : "No album";
+        var artistDisplay = song.artist ? song.artist.name : "Unknown Artist";
+
+        var row = '<tr>' +
+        '<td class="fw-bold text-white">' + song.title + '</td>' +
+        '<td class="text-light">' + artistDisplay + '</td>' +
+        '<td>' + (song.length || '-') + '</td>' +
+        '<td style="color: #1DB954;">' + albumDisplay + '</td>' +
+        '<td>' +
+        '<button class="btn btn-sm btn-outline-success me-2">Play</button>' +
+        '<a href="/Songs/Edit/' + song.songId + '" class="text-secondary text-decoration-none me-2 small">Edit</a> ' +
+        '<a href="/Songs/Delete/' + song.songId + '" class="text-danger text-decoration-none small">Delete</a>' +
+        '</td>' +
+        '</tr>';
+        $("#songsTableBody").append(row);
+        });
+        },
+        error: function () {
+        console.log("Found and error while searching.");
+        }
+        });
+        });
+        });
+    </script>
+}
