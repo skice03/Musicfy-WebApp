@@ -11,3 +11,6 @@
 
 # ignore the created db file 
 musicfy.db
+
+# misc
+/docs/
