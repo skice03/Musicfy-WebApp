@@ -1,0 +1,13 @@
+# .NET compiled
+[Bb]in/
+[Oo]bj/
+
+# macOS hidden
+.DS_Store
+
+# SQLite temp
+*.db-shm
+*.db-wal
+
+# ignore the created db file 
+musicfy.db
