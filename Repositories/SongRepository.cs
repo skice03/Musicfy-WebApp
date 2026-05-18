@@ -57,7 +57,9 @@ namespace MusicfyWebApp.Repositories
                 return await GetAllAsync();
 
             return await _context.Songs
-                .Where(s => s.Title.ToLower().Contains(searchTerm.ToLower()))
+                .Include(s => s.Artist)
+                .Include(s => s.Album)
+                .Where(s => s.Title != null && s.Title.ToLower().Contains(searchTerm.ToLower()))
                 .ToListAsync();
         }
     }

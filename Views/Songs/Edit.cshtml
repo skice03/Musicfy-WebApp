@@ -9,14 +9,24 @@
     
     <div class="row">
         <div class="col-md-6">
-            <form asp-action="Edit">
+            <form asp-action="Edit" enctype="multipart/form-data">
                 <input type="hidden" asp-for="SongId" />
+                <input type="hidden" asp-for="AudioUrl" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 
                 <div class="form-group mb-3">
                     <label asp-for="Title" class="control-label mb-1">Title</label>
                     <input asp-for="Title" class="form-control bg-dark text-white border-secondary" />
                     <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="ArtistId" class="control-label mb-1">Artist</label>
+                    <select asp-for="ArtistId" class="form-control bg-dark text-white border-secondary"
+                            asp-items="ViewBag.ArtistId">
+                        <option value="">Choose an Artist</option>
+                    </select>
+                    <span asp-validation-for="ArtistId" class="text-danger"></span>
                 </div>
                 
                 <div class="form-group mb-3">
@@ -26,14 +36,22 @@
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="AudioUrl" class="control-label mb-1">Audio URL</label>
-                    <input asp-for="AudioUrl" class="form-control bg-dark text-white border-secondary" />
+                    <label class="control-label mb-1">Audio File</label>
+                    @if (!string.IsNullOrEmpty(Model.AudioUrl))
+                    {
+                        <p class="text-secondary small mb-1">Current file: @Model.AudioUrl?.Split('/').LastOrDefault()</p>
+                    }
+                    <input type="file" name="AudioFile" accept="audio/*"
+                           class="form-control bg-dark text-white border-secondary" />
+                    <small class="text-secondary">Leave empty to keep the current file.</small>
                 </div>
 
                 <div class="form-group mb-4">
                     <label asp-for="AlbumId" class="control-label mb-1">Album</label>
                     <select asp-for="AlbumId" class="form-control bg-dark text-white border-secondary"
-                            asp-items="ViewBag.AlbumId"></select>
+                            asp-items="ViewBag.AlbumId">
+                        <option value="">No album (Single)</option>
+                    </select>
                     <span asp-validation-for="AlbumId" class="text-danger"></span>
                 </div>
 
@@ -45,3 +63,7 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

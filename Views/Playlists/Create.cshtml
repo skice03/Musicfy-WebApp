@@ -3,38 +3,49 @@
     ViewData["Title"] = "Create Playlist";
 }
 
-<div class="container mt-4 text-white">
-    <h1>Create New Playlist</h1>
-    <div class="row mt-4">
+<div class="container mt-5 text-white">
+    <div class="row justify-content-center">
         <div class="col-md-6">
-            <form asp-action="Create">
+            <h2 class="mb-4">Create a new playlist</h2>
+
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                 <div class="mb-3">
-                    <label asp-for="Title" class="form-label">Playlist Title</label>
+                    <label asp-for="Title" class="form-label">Playlist Title <span class="text-danger">*</span></label>
                     <input asp-for="Title" class="form-control bg-dark text-white border-secondary"
                            placeholder="ex: Summer Vibes" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
-                
+
                 <div class="mb-3">
                     <label asp-for="Description" class="form-label">Description</label>
-                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="2"
-                              placeholder="Scurtă descriere..."></textarea>
+                    <textarea asp-for="Description" class="form-control bg-dark text-white border-secondary" rows="3"
+                              placeholder="What's this playlist about?"></textarea>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="ImageUrl" class="form-label">Cover URL</label>
-                    <input asp-for="ImageUrl" class="form-control bg-dark text-white border-secondary"
-                           placeholder="ex: /images/cover.jpg" />
-                </div>
-                
-                <div class="mb-3 form-check">
-                    <input class="form-check-input" asp-for="IsPublic" />
-                    <label class="form-check-label" asp-for="IsPublic">Make this playlist public?</label>
+                    <label class="form-label">Cover Image</label>
+                    <input type="file" name="CoverImage" accept="image/*"
+                           class="form-control bg-dark text-white border-secondary" />
+                    <small class="text-secondary">Supported formats: JPG, PNG, WEBP</small>
                 </div>
 
-                <button type="submit" class="btn btn-success px-4">Save</button>
-                <a asp-action="Index" class="btn btn-secondary ms-2">Go Back</a>
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" asp-for="IsPublic" />
+                    <label class="form-check-label text-secondary" asp-for="IsPublic">Make this playlist public?</label>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3"
+                        style="background-color: #1DB954; border: none; font-weight: 600;">Create Playlist</button>
+                <div class="text-center mt-3">
+                    <a asp-action="Index" class="text-secondary text-decoration-none">Back to playlists</a>
+                </div>
             </form>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

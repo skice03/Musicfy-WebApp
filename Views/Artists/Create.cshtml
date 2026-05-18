@@ -1,40 +1,48 @@
 @model MusicfyWebApp.Models.Artist
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Add Artist";
 }
 
-<h1>Create</h1>
+<div class="container mt-5 text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Add a new artist</h2>
 
-<h4>Artist</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Bio" class="control-label"></label>
-                <input asp-for="Bio" class="form-control" />
-                <span asp-validation-for="Bio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label">Image URL</label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Artist Name <span class="text-danger">*</span></label>
+                    <input asp-for="Name" class="form-control bg-dark text-white border-secondary"
+                           placeholder="ex: The Weeknd" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Bio" class="form-label">Biography</label>
+                    <textarea asp-for="Bio" class="form-control bg-dark text-white border-secondary" rows="3"
+                              placeholder="Tell us about this artist..."></textarea>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Artist Photo</label>
+                    <input type="file" name="ImageFile" accept="image/*"
+                           class="form-control bg-dark text-white border-secondary" />
+                    <small class="text-secondary">Supported formats: JPG, PNG, WEBP</small>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3"
+                        style="background-color: #1DB954; border: none; font-weight: 600;">Add Artist</button>
+                <div class="text-center mt-3">
+                    <a asp-action="Index" class="text-secondary text-decoration-none">Back to artists</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

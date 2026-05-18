@@ -9,5 +9,7 @@ namespace MusicfyWebApp.Services.Interfaces
         Task CreatePlaylistAsync(Playlist playlist);
         Task UpdatePlaylistAsync(Playlist playlist);
         Task DeletePlaylistAsync(int id);
+        Task AddSongToPlaylistAsync(int playlistId, int songId);
+        Task RemoveSongFromPlaylistAsync(int playlistId, int songId);
     }
 }

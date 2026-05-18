@@ -9,69 +9,133 @@
 
     <div class="row mb-5 align-items-center">
         <div class="col-md-3 text-center mb-4 mb-md-0">
-            <img src="@(!string.IsNullOrEmpty(Model.ImageUrl) ? Model.ImageUrl : "https://via.placeholder.com/250")"
-                 class="rounded-circle shadow" style="width: 250px; height: 250px; object-fit: cover;"
-                 alt="@Model.Name Profile Picture">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="rounded-circle shadow"
+                     style="width: 250px; height: 250px; object-fit: cover;" alt="@Model.Name">
+            }
+            else
+            {
+                <div class="bg-secondary rounded-circle shadow d-flex align-items-center justify-content-center mx-auto"
+                     style="width: 250px; height: 250px;">
+                    <span class="display-1 text-white-50">👤</span>
+                </div>
+            }
         </div>
         <div class="col-md-9">
-            <h6 class="text-uppercase mb-2" style="color: #1DB954; font-weight: 600; letter-spacing: 2px;">Verified
-                Artist</h6>
-                <h1 class="display-3 fw-bold mb-3" style="color: white;">@Model.Name</h1>
-            
-                <p class="lead" style="color: #B3B3B3;">
-                    @(string.IsNullOrEmpty(Model.Bio) ? "This artist doesn't have a bio." : Model.Bio)
-                </p>
-            
+            <h6 class="text-uppercase mb-2" style="color: #1DB954; font-weight: 600; letter-spacing: 2px;">Artist</h6>
+            <h1 class="display-3 fw-bold mb-3" style="color: white;">@Model.Name</h1>
+            <p class="lead" style="color: #B3B3B3;">
+                @(string.IsNullOrEmpty(Model.Bio) ? "This artist doesn't have a bio." : Model.Bio)
+            </p>
+
+            @if (User.IsInRole("Admin"))
+            {
                 <div class="mt-4">
-                    <button class="btn btn-success px-4 py-2 me-2"
-                            style="border-radius: 50px; font-weight: bold;">Play</button>
-                    <button class="btn btn-outline-light px-4 py-2" style="border-radius: 50px;">Follow</button>
-                
-                    <a asp-action="Edit" asp-route-id="@Model.ArtistId" class="btn btn-link text-secondary ms-3">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@Model.ArtistId" class="btn btn-link text-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@Model.ArtistId" class="btn btn-outline-secondary btn-sm me-2">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@Model.ArtistId" class="btn btn-outline-danger btn-sm">Delete</a>
                 </div>
-            </div>
+            }
         </div>
-    
-        <hr style="border-color: #282828; margin-bottom: 40px;">
-    
-        <h3 class="mb-4 text-white" style="font-weight: 600;">Popular Releases</h3>
-    
-        <table class="table table-dark table-hover mt-3" style="background-color: transparent;">
-            <thead>
-                <tr style="border-bottom: 2px solid #282828;">
-                    <th class="text-secondary pb-3">#</th>
-                    <th class="text-secondary pb-3">Title</th>
-                    <th class="text-secondary pb-3">Album</th>
-                    <th class="text-secondary pb-3">Length</th>
-                    <th class="text-secondary pb-3"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @{
-                    int index = 1;
-                }
-            
-                @if (Model.Songs != null && Model.Songs.Any())
-                {
-                    @foreach (var song in Model.Songs)
-                    {
-                        <tr>
-                            <td class="pt-3 text-secondary">@(index++)</td>
-                            <td class="pt-3 fw-bold text-white">@song.Title</td>
-                            <td class="pt-3" style="color: #1DB954;">@(song.Album != null ? song.Album.Title : "Single")</td>
-                            <td class="pt-3" style="color: #B3B3B3;">@song.Length</td>
-                            <td><button class="btn btn-sm btn-outline-light" style="border-radius: 50px;">Play</button></td>
-                        </tr>
-                    }
-                }
-                else
+    </div>
+
+    <hr style="border-color: #282828; margin-bottom: 40px;">
+
+    <h3 class="mb-4 text-white" style="font-weight: 600;">Songs</h3>
+
+    <table class="table table-dark table-hover mt-3" style="background-color: transparent;">
+        <thead>
+            <tr style="border-bottom: 2px solid #282828;">
+                <th class="text-secondary pb-3">#</th>
+                <th class="text-secondary pb-3">Title</th>
+                <th class="text-secondary pb-3">Album</th>
+                <th class="text-secondary pb-3">Length</th>
+                <th class="text-secondary pb-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 1;
+            }
+
+            @if (Model.Songs != null && Model.Songs.Any())
+            {
+                @foreach (var song in Model.Songs)
                 {
                     <tr>
-                        <td colspan="5" class="text-center text-secondary py-4">Currently there are no songs from this artist.
+                        <td class="pt-3 text-secondary">@(index++)</td>
+                        <td class="pt-3 fw-bold text-white">@song.Title</td>
+                        <td class="pt-3" style="color: #1DB954;">@(song.Album != null ? song.Album.Title : "Single")</td>
+                        <td class="pt-3" style="color: #B3B3B3;">@song.Length</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(song.AudioUrl))
+                            {
+                                <button class="btn btn-sm btn-outline-success btn-play-song" style="border-radius: 50px;"
+                                        data-audio-url="@song.AudioUrl"
+                                        data-song-title="@song.Title"
+                                        data-song-artist="@Model.Name">
+                                    ▶ Play
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-outline-secondary" style="border-radius: 50px;" disabled>No Audio</button>
+                            }
                         </td>
                     </tr>
                 }
-            </tbody>
-        </table>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-secondary py-4">Currently there are no songs from this artist.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Mini Audio Player Bar -->
+<div id="audioPlayerBar" class="fixed-bottom d-none" style="background: linear-gradient(180deg, #181818 0%, #000 100%); border-top: 1px solid #282828; padding: 10px 0;">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div class="me-3">
+                <span id="playerSongTitle" class="fw-bold text-white d-block" style="font-size: 0.9rem;">Song Title</span>
+                <span id="playerSongArtist" class="text-secondary" style="font-size: 0.75rem;">Artist</span>
+            </div>
+        </div>
+        <div class="flex-grow-1 mx-4">
+            <audio id="audioPlayer" class="w-100" style="height: 32px; filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(12%);"></audio>
+        </div>
+        <button id="closePlayer" class="btn btn-sm btn-outline-secondary" style="border-radius: 50px;">✕</button>
     </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".btn-play-song").on("click", function () {
+                var audioUrl = $(this).data("audio-url");
+                var title = $(this).data("song-title");
+                var artist = $(this).data("song-artist");
+
+                $("#playerSongTitle").text(title);
+                $("#playerSongArtist").text(artist);
+
+                var player = document.getElementById("audioPlayer");
+                player.src = audioUrl;
+                player.controls = true;
+                player.play();
+
+                $("#audioPlayerBar").removeClass("d-none");
+            });
+
+            $("#closePlayer").on("click", function () {
+                var player = document.getElementById("audioPlayer");
+                player.pause();
+                player.src = "";
+                $("#audioPlayerBar").addClass("d-none");
+            });
+        });
+    </script>
+}

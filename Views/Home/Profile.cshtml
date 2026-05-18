@@ -1,64 +1,131 @@
+@model MusicfyWebApp.Models.ApplicationUser
 @{
     ViewData["Title"] = "Profile";
+    var userRole = ViewBag.UserRole as string ?? "User";
+    var userPlaylists = ViewBag.UserPlaylists as List<Playlist> ?? new List<Playlist>();
 }
 <div class="container mt-5">
+    <!-- Success / Error Messages -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
     <div class="row mb-5 align-items-center">
         <div class="col-md-auto text-center text-md-start mb-3 mb-md-0">
-            <img src="~/resources/pfp.jpg" class="rounded-circle shadow"
-                 style="width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture">
-            </div>
-            <div class="col-md">
-                <p class="text-uppercase mb-1" style="color: #B3B3B3; font-weight: 600; letter-spacing: 1px;">User Profile
-                </p>
-                <h1 class="display-4 fw-bold mb-2" style="color: white;">Student</h1>
-                <p class="lead" style="color: #1DB954; font-weight: 600;">2 Public Playlists • 20 Followers</p>
-            </div>
-        </div>
-        <hr style="border-color: #282828; margin-bottom: 40px;">
-        <div class="row">
-            <div class="col-md-5 mb-5 mb-md-0">
-                <h3 class="mb-4" style="font-weight: 600;">Account Settings</h3>
-                <form>
-                    <div class="mb-3">
-                        <label class="form-label text-secondary">Display Name</label>
-                        <input type="text" class="form-control bg-dark text-white border-secondary" value="Student">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label text-secondary">Email</label>
-                        <input type="email" class="form-control bg-dark text-white border-secondary"
-                               value="user@student.ucv.ro">
-                    </div>
-                    <div class="mb-4">
-                        <label class="form-label text-secondary">Change Password</label>
-                        <input type="password" class="form-control bg-dark text-white border-secondary"
-                               placeholder="Enter your new password...">
-                    </div>
-                    <button type="submit" class="btn btn-musicfy px-4 py-2">Update Settings</button>
-                </form>
-            </div>
-            <div class="col-md-1"></div>
-            <div class="col-md-6">
-                <h3 class="mb-4" style="font-weight: 600;">My Playlists</h3>
-                <div class="list-group">
-                    <a href="#" class="list-group-item list-group-item-action bg-dark border-secondary mb-3 rounded p-3"
-                           style="transition: 0.3s;">
-                        <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                            <h5 class="mb-0 fw-bold" style="color: #1DB954;">Liked Songs</h5>
-                            <span class="badge rounded-pill" style="background-color: #1DB954; color: black;">255
-                                songs</span>
-                            </div>
-                            <small class="text-secondary">All songs you've liked.</small>
-                        </a>
-                        <a href="#"
-                               class="list-group-item list-group-item-action bg-dark text-white border-secondary mb-3 rounded p-3"
-                               style="transition: 0.3s;">
-                            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
-                                <h5 class="mb-0 fw-bold">Workout Mix</h5>
-                                <span class="badge bg-secondary rounded-pill">89 songs</span>
-                            </div>
-                            <small class="text-secondary">Gym Playlist.</small>
-                        </a>
-                    </div>
+            @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+            {
+                <img src="@Model.ProfileImageUrl" alt="Profile" class="rounded-circle shadow"
+                     style="width: 150px; height: 150px; object-fit: cover;" />
+            }
+            else
+            {
+                <div class="bg-secondary rounded-circle shadow d-flex align-items-center justify-content-center mx-auto"
+                     style="width: 150px; height: 150px;">
+                    <span class="display-3">👤</span>
                 </div>
+            }
+            <!-- Profile picture upload -->
+            <form asp-action="UploadProfilePicture" method="post" enctype="multipart/form-data" class="mt-2 text-center">
+                @Html.AntiForgeryToken()
+                <label class="btn btn-sm btn-outline-secondary" style="cursor: pointer; border-radius: 50px; font-size: 0.75rem;">
+                    Change Photo
+                    <input type="file" name="ProfileImage" accept="image/*" style="display: none;"
+                           onchange="this.form.submit();" />
+                </label>
+            </form>
+        </div>
+        <div class="col-md">
+            <p class="text-uppercase mb-1" style="color: #B3B3B3; font-weight: 600; letter-spacing: 1px;">
+                @userRole Profile
+            </p>
+            <h1 class="display-4 fw-bold mb-2" style="color: white;">@Model.UserName</h1>
+            <p class="lead" style="color: #1DB954; font-weight: 600;">
+                @userPlaylists.Count Playlist@(userPlaylists.Count != 1 ? "s" : "")
+            </p>
+        </div>
+    </div>
+
+    <hr style="border-color: #282828; margin-bottom: 40px;">
+
+    <div class="row">
+        <!-- Account Info & Password Change -->
+        <div class="col-md-5 mb-5 mb-md-0">
+            <h3 class="mb-4" style="font-weight: 600;">Account Info</h3>
+            <dl class="row">
+                <dt class="col-sm-4 text-secondary">Username</dt>
+                <dd class="col-sm-8">@Model.UserName</dd>
+
+                <dt class="col-sm-4 text-secondary">Email</dt>
+                <dd class="col-sm-8">@Model.Email</dd>
+
+                <dt class="col-sm-4 text-secondary">Role</dt>
+                <dd class="col-sm-8">
+                    <span class="badge @(userRole == "Admin" ? "bg-danger" : "bg-success")">@userRole</span>
+                </dd>
+            </dl>
+
+            <hr class="border-secondary mt-4 mb-4">
+            <h5 class="mb-3" style="font-weight: 600;">Change Password</h5>
+            <form asp-action="ChangePassword" method="post">
+                @Html.AntiForgeryToken()
+                <div class="mb-2">
+                    <input type="password" name="currentPassword" class="form-control bg-dark text-white border-secondary form-control-sm"
+                           placeholder="Current Password" required />
+                </div>
+                <div class="mb-2">
+                    <input type="password" name="newPassword" class="form-control bg-dark text-white border-secondary form-control-sm"
+                           placeholder="New Password" required />
+                </div>
+                <div class="mb-2">
+                    <input type="password" name="confirmNewPassword" class="form-control bg-dark text-white border-secondary form-control-sm"
+                           placeholder="Confirm New Password" required />
+                </div>
+                <button type="submit" class="btn btn-sm btn-outline-light mt-1" style="border-radius: 50px;">Update Password</button>
+            </form>
+        </div>
+
+        <div class="col-md-1"></div>
+
+        <!-- Playlists -->
+        <div class="col-md-6">
+            <h3 class="mb-4" style="font-weight: 600;">My Playlists</h3>
+            <div class="list-group">
+                @if (userPlaylists.Any())
+                {
+                    @foreach (var playlist in userPlaylists)
+                    {
+                        <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.PlaylistId"
+                           class="list-group-item list-group-item-action bg-dark border-secondary mb-3 rounded p-3"
+                           style="transition: 0.3s;">
+                            <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                <h5 class="mb-0 fw-bold" style="color: #1DB954;">@playlist.Title</h5>
+                                <span class="badge rounded-pill @(playlist.IsPublic ? "bg-success" : "bg-secondary")">
+                                    @(playlist.IsPublic ? "Public" : "Private")
+                                </span>
+                            </div>
+                            <small class="text-secondary">@(string.IsNullOrEmpty(playlist.Description) ? "No description" : playlist.Description)</small>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <div class="text-center py-4">
+                        <p class="text-secondary">You haven't created any playlists yet.</p>
+                        <a asp-controller="Playlists" asp-action="Create" class="btn btn-sm btn-musicfy">Create your first playlist</a>
+                    </div>
+                }
             </div>
         </div>
+    </div>
+</div>

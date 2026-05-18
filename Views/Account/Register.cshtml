@@ -1,0 +1,61 @@
+@model MusicfyWebApp.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card bg-dark border-secondary shadow p-4">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold" style="color: #1DB954;">Create Account</h2>
+                    <p class="text-secondary">Join Musicfy and start building your library</p>
+                </div>
+
+                <form asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label text-secondary">Username</label>
+                        <input asp-for="Username" class="form-control bg-dark text-white border-secondary"
+                               placeholder="Choose a username" autocomplete="username" />
+                        <span asp-validation-for="Username" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label text-secondary">Email Address</label>
+                        <input asp-for="Email" class="form-control bg-dark text-white border-secondary"
+                               placeholder="your@email.com" autocomplete="email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label text-secondary">Password</label>
+                        <input asp-for="Password" class="form-control bg-dark text-white border-secondary"
+                               placeholder="At least 6 characters" autocomplete="new-password" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="ConfirmPassword" class="form-label text-secondary">Confirm Password</label>
+                        <input asp-for="ConfirmPassword" class="form-control bg-dark text-white border-secondary"
+                               placeholder="Repeat your password" autocomplete="new-password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-musicfy w-100 py-2 fw-bold">Sign Up</button>
+
+                    <div class="text-center mt-4">
+                        <span class="text-secondary">Already have an account?</span>
+                        <a asp-action="Login" class="text-decoration-none" style="color: #1DB954;">Log in</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

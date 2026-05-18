@@ -1,19 +1,24 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace MusicfyWebApp.Models
 {
-    public class MusicfyContext : DbContext
+    public class MusicfyContext : IdentityDbContext<ApplicationUser>
     {
         public MusicfyContext(DbContextOptions<MusicfyContext> options)
             : base(options)
         {
         }
 
-        public DbSet<User>? Users { get; set; }
-        public DbSet<Artist>? Artists { get; set; }
-        public DbSet<Album>? Albums { get; set; }
-        public DbSet<Song>? Songs { get; set; }
-        public DbSet<Playlist>? Playlists { get; set; }
-        public DbSet<PlaylistSong>? PlaylistSongs { get; set; }
+        public DbSet<Artist> Artists { get; set; }
+        public DbSet<Album> Albums { get; set; }
+        public DbSet<Song> Songs { get; set; }
+        public DbSet<Playlist> Playlists { get; set; }
+        public DbSet<PlaylistSong> PlaylistSongs { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder); // Required for Identity tables
+        }
     }
 }

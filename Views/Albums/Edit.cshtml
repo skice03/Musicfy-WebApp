@@ -1,33 +1,63 @@
 @model MusicfyWebApp.Models.Album
 
 @{
-    ViewData["Title"] = "Album Edit";
+    ViewData["Title"] = "Edit Album";
 }
 
-<h1>Edit Album</h1>
+<div class="container mt-5 text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Edit album details</h2>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <input type="hidden" asp-for="AlbumId" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReleaseYear" class="control-label"></label>
-                <input asp-for="ReleaseYear" type="number" class="form-control" />
-                <span asp-validation-for="ReleaseYear" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArtistId" class="control-label">Artist</label>
-                <select asp-for="ArtistId" class="form-control" asp-items="ViewBag.ArtistId"></select>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Update" class="btn btn-primary" />
-                <a asp-action="Index">Back to list</a>
-            </div>
-        </form>
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <input type="hidden" asp-for="AlbumId" />
+                <input type="hidden" asp-for="CoverImageUrl" />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Album Title</label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ReleaseYear" class="form-label">Release Year</label>
+                    <input asp-for="ReleaseYear" type="number" class="form-control bg-dark text-white border-secondary" />
+                    <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ArtistId" class="form-label">Artist</label>
+                    <select asp-for="ArtistId" class="form-control bg-dark text-white border-secondary"
+                            asp-items="ViewBag.ArtistId">
+                    </select>
+                    <span asp-validation-for="ArtistId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cover Image</label>
+                    @if (!string.IsNullOrEmpty(Model.CoverImageUrl))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.CoverImageUrl" alt="Current cover" class="rounded"
+                                 style="width: 80px; height: 80px; object-fit: cover;" />
+                            <span class="text-secondary small ms-2">Current cover</span>
+                        </div>
+                    }
+                    <input type="file" name="CoverImage" accept="image/*"
+                           class="form-control bg-dark text-white border-secondary" />
+                    <small class="text-secondary">Leave empty to keep the current cover.</small>
+                </div>
+
+                <div class="form-group mt-4">
+                    <button type="submit" class="btn btn-primary px-4">Update</button>
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Go back</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

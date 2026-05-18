@@ -1,3 +1,4 @@
+@model MusicfyWebApp.Models.ViewModels.LibraryViewModel
 @{
     ViewData["Title"] = "Library";
 }
@@ -6,74 +7,86 @@
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
         <div class="d-flex align-items-center">
             <h2 class="mb-0 me-3">My Library</h2>
-            <span class="text-secondary small">4 Items</span>
+            <span class="text-secondary small">@(Model.Albums.Count() + Model.Playlists.Count()) Items</span>
         </div>
         
         <div>
             <a asp-controller="Albums" asp-action="Index" class="btn btn-sm btn-outline-secondary me-2">Show all albums</a>
             <a asp-controller="Playlists" asp-action="Index" class="btn btn-sm btn-outline-secondary me-4">Show all playlists</a>
             
-            <a asp-controller="Albums" asp-action="Create" class="btn btn-sm btn-success fw-bold me-2">+ Album</a>
-            <a asp-controller="Playlists" asp-action="Create" class="btn btn-sm btn-success fw-bold">+ Playlist</a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Albums" asp-action="Create" class="btn btn-sm btn-success fw-bold me-2">+ Album</a>
+            }
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Playlists" asp-action="Create" class="btn btn-sm btn-success fw-bold">+ Playlist</a>
+            }
         </div>
     </div>
 
+    @if (!Model.Albums.Any() && !Model.Playlists.Any())
+    {
+        <div class="text-center py-5">
+            <h4 class="text-secondary">Your library is empty</h4>
+            <p class="text-secondary">Start by adding albums and creating playlists!</p>
+        </div>
+    }
+
     <div class="row">
-        <div class="col-md-3 mb-4">
-            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
-                <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge rounded-pill bg-success" style="font-size: 0.6rem;">SINGLE</span>
-                </div>
-                <img src="https://upload.wikimedia.org/wikipedia/en/5/51/Kendrick_Lamar_-_Damn.png" 
-                     class="card-img-top rounded shadow" alt="HUMBLE">
-                <div class="card-body px-0 pb-0 mt-2">
-                    <h5 class="card-title mb-1 text-truncate">HUMBLE.</h5>
-                    <p class="card-text text-secondary">Kendrick Lamar</p>
-                </div>
+        @foreach (var album in Model.Albums)
+        {
+            <div class="col-md-3 mb-4">
+                <a asp-controller="Albums" asp-action="Details" asp-route-id="@album.AlbumId" class="text-decoration-none">
+                    <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge rounded-pill bg-primary" style="font-size: 0.6rem;">ALBUM</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(album.CoverImageUrl))
+                        {
+                            <img src="@album.CoverImageUrl" class="card-img-top rounded shadow" alt="@album.Title">
+                        }
+                        else
+                        {
+                            <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="aspect-ratio: 1/1;">
+                                <span class="fs-1 text-white-50">🎵</span>
+                            </div>
+                        }
+                        <div class="card-body px-0 pb-0 mt-2">
+                            <h5 class="card-title mb-1 text-truncate">@album.Title</h5>
+                            <p class="card-text text-secondary">@album.ReleaseYear • @(album.Artist?.Name ?? "Unknown")</p>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
+        }
 
-        <div class="col-md-3 mb-4">
-            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
-                <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge rounded-pill bg-primary" style="font-size: 0.6rem;">ALBUM</span>
-                </div>
-                <img src="https://upload.wikimedia.org/wikipedia/en/9/90/Scorpion_by_Drake.jpg" 
-                     class="card-img-top rounded shadow" alt="Scorpion">
-                <div class="card-body px-0 pb-0 mt-2">
-                    <h5 class="card-title mb-1 text-truncate">Scorpion</h5>
-                    <p class="card-text text-secondary">25 Tracks • Drake</p>
-                </div>
+        @foreach (var playlist in Model.Playlists)
+        {
+            <div class="col-md-3 mb-4">
+                <a asp-controller="Playlists" asp-action="Details" asp-route-id="@playlist.PlaylistId" class="text-decoration-none">
+                    <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
+                        <div class="position-absolute top-0 end-0 m-3">
+                            <span class="badge rounded-pill bg-success" style="font-size: 0.6rem;">PLAYLIST</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(playlist.ImageUrl))
+                        {
+                            <img src="@playlist.ImageUrl" class="card-img-top rounded shadow" alt="@playlist.Title">
+                        }
+                        else
+                        {
+                            <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="aspect-ratio: 1/1;">
+                                <span class="fs-1 text-white-50">📂</span>
+                            </div>
+                        }
+                        <div class="card-body px-0 pb-0 mt-2">
+                            <h5 class="card-title mb-1 text-truncate">@playlist.Title</h5>
+                            <p class="card-text text-secondary">@(playlist.IsPublic ? "Public" : "Private")</p>
+                        </div>
+                    </div>
+                </a>
             </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
-                <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge rounded-pill bg-success" style="font-size: 0.6rem;">SINGLE</span>
-                </div>
-                <img src="https://upload.wikimedia.org/wikipedia/en/8/88/Rae_Sremmurd_%E2%80%93_Black_Beatles.jpg" 
-                     class="card-img-top rounded shadow" alt="Black Beatles">
-                <div class="card-body px-0 pb-0 mt-2">
-                    <h5 class="card-title mb-1 text-truncate">Black Beatles</h5>
-                    <p class="card-text text-secondary">Rae Sremmurd</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 mb-4">
-            <div class="card p-3 border-secondary bg-dark h-100 shadow-hover">
-                <div class="position-absolute top-0 end-0 m-3">
-                    <span class="badge rounded-pill bg-primary" style="font-size: 0.6rem;">ALBUM</span>
-                </div>
-                <img src="https://upload.wikimedia.org/wikipedia/en/2/29/DS2_by_Future.jpg" 
-                     class="card-img-top rounded shadow" alt="DS2">
-                <div class="card-body px-0 pb-0 mt-2">
-                    <h5 class="card-title mb-1 text-truncate">DS2</h5>
-                    <p class="card-text text-secondary">13 Tracks • Future</p>
-                </div>
-            </div>
-        </div>
+        }
     </div>
 </div>
 

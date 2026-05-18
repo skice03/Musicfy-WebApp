@@ -18,7 +18,7 @@ namespace MusicfyWebApp.Repositories
         public async Task<Artist?> GetByIdAsync(int id)
         {
             return await _context.Artists
-                                 .Include(a => a.Songs) // we first get the songs and the album afterwards
+                                 .Include(a => a.Songs!) // we first get the songs and the album afterwards
                                  .ThenInclude(s => s.Album)
                                  .FirstOrDefaultAsync(a => a.ArtistId == id);
         }

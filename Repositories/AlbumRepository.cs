@@ -13,8 +13,15 @@ namespace MusicfyWebApp.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Album>> GetAllAsync() => await _context.Albums.ToListAsync();
-        public async Task<Album?> GetByIdAsync(int id) => await _context.Albums.FindAsync(id);
+        public async Task<IEnumerable<Album>> GetAllAsync() =>
+            await _context.Albums.Include(a => a.Artist).ToListAsync();
+
+        public async Task<Album?> GetByIdAsync(int id) =>
+            await _context.Albums
+                .Include(a => a.Artist)
+                .Include(a => a.Songs!)
+                    .ThenInclude(s => s.Artist)
+                .FirstOrDefaultAsync(a => a.AlbumId == id);
 
         public async Task AddAsync(Album album)
         {

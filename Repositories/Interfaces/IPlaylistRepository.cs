@@ -9,5 +9,7 @@ namespace MusicfyWebApp.Repositories.Interfaces
         Task AddAsync(Playlist playlist);
         Task UpdateAsync(Playlist playlist);
         Task DeleteAsync(int id);
+        Task AddSongAsync(int playlistId, int songId);
+        Task RemoveSongAsync(int playlistId, int songId);
     }
 }

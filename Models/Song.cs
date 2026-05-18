@@ -13,12 +13,15 @@ namespace MusicfyWebApp.Models
         public Artist? Artist { get; set; }
         [Required(ErrorMessage = "Length is required")]
         public string? Length { get; set; } // ex: "1:23"
-        [Required(ErrorMessage = "Path is required")]
-        public string? AudioUrl { get; set; }
+        public string? AudioUrl { get; set; } // path to uploaded audio file
 
         // Album reference (Foreign Key & Reference Navigation Property)
         public int? AlbumId { get; set; }
         public Album? Album { get; set; }
+
+        // User who uploaded this song (null = platform/admin song)
+        public string? UserId { get; set; }
+        public ApplicationUser? User { get; set; }
 
         // A song belongs to one or more playlists
         public ICollection<PlaylistSong>? PlaylistSongs { get; set; }

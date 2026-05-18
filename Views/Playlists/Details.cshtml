@@ -1,42 +1,215 @@
 @model MusicfyWebApp.Models.Playlist
 @{
-    ViewData["Title"] = "Playlist Details";
+    ViewData["Title"] = Model.Title;
+    var canModify = ViewBag.CanModify == true;
+    var availableSongs = ViewBag.AvailableSongs as List<Song> ?? new List<Song>();
 }
 
-<div class="container mt-4 text-white">
-    <h1>Playlist Details</h1>
-    <hr class="border-secondary" />
-    
-    <div class="row mt-4">
-        <div class="col-md-4">
+<div class="container mt-5 text-white">
+    <a asp-action="Index" class="text-secondary text-decoration-none mb-4 d-inline-block">&larr; Back to Playlists</a>
+
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-3 text-center mb-4 mb-md-0">
             @if (!string.IsNullOrEmpty(Model.ImageUrl))
             {
-                <img src="@Model.ImageUrl" class="img-fluid rounded shadow" alt="Cover">
+                <img src="@Model.ImageUrl" class="rounded shadow" style="width: 250px; height: 250px; object-fit: cover;" alt="@Model.Title">
             }
             else
             {
-                <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 250px;">
-                    <span class="text-white-50">No Cover</span>
+                <div class="bg-secondary rounded shadow d-flex align-items-center justify-content-center mx-auto"
+                     style="width: 250px; height: 250px;">
+                    <span class="display-1 text-white-50">🎵</span>
                 </div>
             }
         </div>
-        <div class="col-md-8">
-            <dl class="row">
-                <dt class="col-sm-3 text-secondary">Title</dt>
-                <dd class="col-sm-9 fs-5 text-success">@Model.Title</dd>
-                
-                <dt class="col-sm-3 text-secondary">Descriere</dt>
-                <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Description) ? "No description" : Model.Description)
-                </dd>
-
-                <dt class="col-sm-3 text-secondary">Status</dt>
-                <dd class="col-sm-9">@(Model.IsPublic ? "🌐 Public" : "🔒 Private")</dd>
-            </dl>
-
-            <div class="mt-4">
-                <a asp-action="Edit" asp-route-id="@Model?.PlaylistId" class="btn btn-outline-light">Edit</a>
-                <a asp-action="Index" class="btn btn-outline-secondary ms-2">Back to list</a>
+        <div class="col-md-9">
+            <h6 class="text-uppercase mb-2" style="color: #1DB954; font-weight: 600; letter-spacing: 2px;">Playlist</h6>
+            <h1 class="display-3 fw-bold mb-2" style="color: white;">@Model.Title</h1>
+            <p class="lead" style="color: #B3B3B3;">
+                @(string.IsNullOrEmpty(Model.Description) ? "No description" : Model.Description)
+            </p>
+            <div class="d-flex align-items-center mb-3">
+                <span class="badge rounded-pill @(Model.IsPublic ? "bg-success" : "bg-secondary") me-2">
+                    @(Model.IsPublic ? "🌐 Public" : "🔒 Private")
+                </span>
+                @if (Model.User != null)
+                {
+                    <small class="text-secondary">by @Model.User.UserName</small>
+                }
+                <small class="text-secondary ms-2">
+                    &middot; @(Model.PlaylistSongs?.Count ?? 0) song@(Model.PlaylistSongs?.Count != 1 ? "s" : "")
+                </small>
             </div>
+
+            @if (canModify)
+            {
+                <div class="mt-2">
+                    <a asp-action="Edit" asp-route-id="@Model.PlaylistId" class="btn btn-outline-secondary btn-sm me-2">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@Model.PlaylistId" class="btn btn-outline-danger btn-sm">Delete</a>
+                </div>
+            }
         </div>
     </div>
+
+    <hr style="border-color: #282828; margin-bottom: 30px;">
+
+    <!-- Add Song Section (only for playlist owner/admin) -->
+    @if (canModify && availableSongs.Any())
+    {
+        <div class="card bg-dark border-secondary mb-4 p-3">
+            <form asp-action="AddSong" method="post" class="d-flex align-items-center gap-3">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="playlistId" value="@Model.PlaylistId" />
+                <label class="text-secondary fw-bold mb-0 text-nowrap">Add a song:</label>
+                <select name="songId" class="form-select bg-dark text-white border-secondary flex-grow-1" required>
+                    <option value="">Choose a song...</option>
+                    @foreach (var song in availableSongs)
+                    {
+                        var artistName = song.Artist?.Name ?? "Unknown";
+                        <option value="@song.SongId">@song.Title — @artistName</option>
+                    }
+                </select>
+                <button type="submit" class="btn btn-success btn-sm fw-bold text-nowrap" style="border-radius: 50px; padding: 6px 20px;">+ Add</button>
+            </form>
+        </div>
+    }
+    else if (canModify && !availableSongs.Any() && (Model.PlaylistSongs == null || !Model.PlaylistSongs.Any()))
+    {
+        <div class="alert alert-secondary text-center">
+            No songs available to add. <a asp-controller="Songs" asp-action="Create" class="text-success">Upload a song</a> first.
+        </div>
+    }
+
+    <h3 class="mb-4" style="font-weight: 600;">Songs</h3>
+
+    <table class="table table-dark table-hover mt-3" style="background-color: transparent;">
+        <thead>
+            <tr style="border-bottom: 2px solid #282828;">
+                <th class="text-secondary pb-3">#</th>
+                <th class="text-secondary pb-3">Title</th>
+                <th class="text-secondary pb-3">Artist</th>
+                <th class="text-secondary pb-3">Album</th>
+                <th class="text-secondary pb-3">Length</th>
+                <th class="text-secondary pb-3"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                int index = 1;
+            }
+
+            @if (Model.PlaylistSongs != null && Model.PlaylistSongs.Any())
+            {
+                @foreach (var ps in Model.PlaylistSongs)
+                {
+                    var song = ps.Song;
+                    if (song == null) continue;
+
+                    <tr>
+                        <td class="pt-3 text-secondary">@(index++)</td>
+                        <td class="pt-3 fw-bold text-white">@song.Title</td>
+                        <td class="pt-3" style="color: #1DB954;">
+                            @if (song.Artist != null)
+                            {
+                                <a asp-controller="Artists" asp-action="Details" asp-route-id="@song.ArtistId"
+                                   class="text-decoration-none" style="color: #1DB954;">@song.Artist.Name</a>
+                            }
+                            else
+                            {
+                                <span>Unknown</span>
+                            }
+                        </td>
+                        <td class="pt-3" style="color: #B3B3B3;">
+                            @if (song.Album != null)
+                            {
+                                <a asp-controller="Albums" asp-action="Details" asp-route-id="@song.AlbumId"
+                                   class="text-decoration-none" style="color: #B3B3B3;">@song.Album.Title</a>
+                            }
+                            else
+                            {
+                                <span>Single</span>
+                            }
+                        </td>
+                        <td class="pt-3" style="color: #B3B3B3;">@song.Length</td>
+                        <td class="pt-3 text-end">
+                            @if (!string.IsNullOrEmpty(song.AudioUrl))
+                            {
+                                <button class="btn btn-sm btn-outline-success btn-play-song me-1" style="border-radius: 50px;"
+                                        data-audio-url="@song.AudioUrl"
+                                        data-song-title="@song.Title"
+                                        data-song-artist="@(song.Artist?.Name ?? "Unknown")">
+                                    ▶ Play
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-outline-secondary me-1" style="border-radius: 50px;" disabled>No Audio</button>
+                            }
+                            @if (canModify)
+                            {
+                                <form asp-action="RemoveSong" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="playlistId" value="@Model.PlaylistId" />
+                                    <input type="hidden" name="songId" value="@song.SongId" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" style="border-radius: 50px;"
+                                            title="Remove from playlist">✕</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="6" class="text-center text-secondary py-4">This playlist has no songs yet.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+
+<!-- Mini Audio Player Bar -->
+<div id="audioPlayerBar" class="fixed-bottom d-none" style="background: linear-gradient(180deg, #181818 0%, #000 100%); border-top: 1px solid #282828; padding: 10px 0;">
+    <div class="container d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <div class="me-3">
+                <span id="playerSongTitle" class="fw-bold text-white d-block" style="font-size: 0.9rem;">Song Title</span>
+                <span id="playerSongArtist" class="text-secondary" style="font-size: 0.75rem;">Artist</span>
+            </div>
+        </div>
+        <div class="flex-grow-1 mx-4">
+            <audio id="audioPlayer" class="w-100" style="height: 32px; filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(12%);"></audio>
+        </div>
+        <button id="closePlayer" class="btn btn-sm btn-outline-secondary" style="border-radius: 50px;">✕</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".btn-play-song").on("click", function () {
+                var audioUrl = $(this).data("audio-url");
+                var title = $(this).data("song-title");
+                var artist = $(this).data("song-artist");
+
+                $("#playerSongTitle").text(title);
+                $("#playerSongArtist").text(artist);
+
+                var player = document.getElementById("audioPlayer");
+                player.src = audioUrl;
+                player.controls = true;
+                player.play();
+
+                $("#audioPlayerBar").removeClass("d-none");
+            });
+
+            $("#closePlayer").on("click", function () {
+                var player = document.getElementById("audioPlayer");
+                player.pause();
+                player.src = "";
+                $("#audioPlayerBar").addClass("d-none");
+            });
+        });
+    </script>
+}

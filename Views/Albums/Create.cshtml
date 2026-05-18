@@ -1,36 +1,57 @@
 @model MusicfyWebApp.Models.Album
 
 @{
-    ViewData["Title"] = "Creating Album";
+    ViewData["Title"] = "Add Album";
 }
 
-<h1>Add a new album</h1>
+<div class="container mt-5 text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="mb-4">Add a new album</h2>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ReleaseYear" class="control-label">Year</label>
-                <input asp-for="ReleaseYear" type="number" class="form-control" />
-                <span asp-validation-for="ReleaseYear" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ArtistId" class="control-label">Artist</label>
-                <select asp-for="ArtistId" class="form-control" asp-items="ViewBag.ArtistId">
-                    <option value="">Select an artist</option>
-                </select>
-                <span asp-validation-for="ArtistId" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Save" class="btn btn-success" />
-                <a asp-action="Index" class="btn btn-secondary">Return</a>
-            </div>
-        </form>
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label">Album Title <span class="text-danger">*</span></label>
+                    <input asp-for="Title" class="form-control bg-dark text-white border-secondary"
+                           placeholder="ex: After Hours" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ReleaseYear" class="form-label">Release Year</label>
+                    <input asp-for="ReleaseYear" type="number" class="form-control bg-dark text-white border-secondary"
+                           placeholder="ex: 2020" />
+                    <span asp-validation-for="ReleaseYear" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ArtistId" class="form-label">Artist <span class="text-danger">*</span></label>
+                    <select asp-for="ArtistId" class="form-control bg-dark text-white border-secondary"
+                            asp-items="ViewBag.ArtistId">
+                        <option value="">Select an artist</option>
+                    </select>
+                    <span asp-validation-for="ArtistId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Cover Image</label>
+                    <input type="file" name="CoverImage" accept="image/*"
+                           class="form-control bg-dark text-white border-secondary" />
+                    <small class="text-secondary">Supported formats: JPG, PNG, WEBP</small>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3"
+                        style="background-color: #1DB954; border: none; font-weight: 600;">Add Album</button>
+                <div class="text-center mt-3">
+                    <a asp-action="Index" class="text-secondary text-decoration-none">Back to albums</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
