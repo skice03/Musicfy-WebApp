@@ -24,7 +24,13 @@
         </div>
         <div class="col-md-9">
             <h6 class="text-uppercase mb-2" style="color: #1DB954; font-weight: 600; letter-spacing: 2px;">Artist</h6>
-            <h1 class="display-3 fw-bold mb-3" style="color: white;">@Model.Name</h1>
+            <h1 class="display-3 fw-bold mb-3 d-flex align-items-center" style="color: white;">
+                @Model.Name
+                @if (Model.IsVerified)
+                {
+                    <i class="bi bi-patch-check-fill text-primary ms-3" title="Verified" style="font-size: 0.6em; margin-top: 5px;"></i>
+                }
+            </h1>
             <p class="lead" style="color: #B3B3B3;">
                 @(string.IsNullOrEmpty(Model.Bio) ? "This artist doesn't have a bio." : Model.Bio)
             </p>

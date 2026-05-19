@@ -34,7 +34,13 @@
                                 </div>
                             }
 
-                            <h5 class="text-white fw-bold mb-1">@item.Name</h5>
+                            <h5 class="text-white fw-bold mb-1 d-flex align-items-center justify-content-center">
+                                @item.Name
+                                @if (item.IsVerified)
+                                {
+                                    <i class="bi bi-patch-check-fill text-primary ms-2" title="Verified" style="font-size: 0.9em;"></i>
+                                }
+                            </h5>
                             <p class="text-secondary small">Artist</p>
                         </div>
                     </a>

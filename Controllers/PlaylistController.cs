@@ -179,7 +179,26 @@ namespace MusicfyWebApp.Controllers
             if (playlist == null || !CanModifyPlaylist(playlist))
                 return RedirectToAction("AccessDenied", "Account");
 
-            await _playlistService.AddSongToPlaylistAsync(playlistId, songId);
+            var songExists = playlist.PlaylistSongs?.Any(ps => ps.SongId == songId) == true;
+
+            if (songExists)
+            {
+                TempData["Error"] = $"This song is already in '{playlist.Title}'.";
+            }
+            else
+            {
+                await _playlistService.AddSongToPlaylistAsync(playlistId, songId);
+                TempData["Success"] = $"Song successfully added to '{playlist.Title}'!";
+            }
+
+            // Redirect back to the page the user came from (e.g., Songs Index or Playlist Details)
+            // This prevents a jarring redirect and keeps the user in their current workflow without reloading the whole app structure.
+            var referer = Request.Headers["Referer"].ToString();
+            if (!string.IsNullOrEmpty(referer))
+            {
+                return Redirect(referer);
+            }
+
             return RedirectToAction(nameof(Details), new { id = playlistId });
         }
 

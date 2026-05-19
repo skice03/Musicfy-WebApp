@@ -69,7 +69,11 @@
                     <tr>
                         <td class="pt-3 text-secondary">@(index++)</td>
                         <td class="pt-3 fw-bold text-white">@song.Title</td>
-                        <td class="pt-3" style="color: #1DB954;">@(song.Artist != null ? song.Artist.Name : Model.Artist?.Name ?? "Unknown")</td>
+                        <td class="pt-3">
+                            <a asp-controller="Artists" asp-action="Details" asp-route-id="@song.ArtistId" class="text-decoration-none" style="color: #1DB954; transition: 0.2s;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                                @(song.Artist != null ? song.Artist.Name : Model.Artist?.Name ?? "Unknown")
+                            </a>
+                        </td>
                         <td class="pt-3" style="color: #B3B3B3;">@song.Length</td>
                         <td>
                             @if (!string.IsNullOrEmpty(song.AudioUrl))

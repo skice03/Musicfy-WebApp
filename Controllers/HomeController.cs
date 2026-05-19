@@ -11,20 +11,31 @@ public class HomeController : Controller
 {
     private readonly IAlbumService _albumService;
     private readonly IPlaylistService _playlistService;
+    private readonly ISongService _songService;
+    private readonly IArtistService _artistService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IWebHostEnvironment _environment;
 
     public HomeController(IAlbumService albumService, IPlaylistService playlistService,
+        ISongService songService, IArtistService artistService,
         UserManager<ApplicationUser> userManager, IWebHostEnvironment environment)
     {
         _albumService = albumService;
         _playlistService = playlistService;
+        _songService = songService;
+        _artistService = artistService;
         _userManager = userManager;
         _environment = environment;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
+        var songs = await _songService.GetAllSongsAsync();
+        ViewBag.TrackCount = songs.Count();
+
+        var artists = await _artistService.GetAllArtistsAsync();
+        ViewBag.VerifiedCount = artists.Count(a => a.IsVerified);
+
         return View();
     }
 

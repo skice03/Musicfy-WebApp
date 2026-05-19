@@ -13,27 +13,41 @@ namespace MusicfyWebApp.Controllers
         private readonly ISongService _songService;
         private readonly IAlbumService _albumService;
         private readonly IArtistService _artistService;
+        private readonly IPlaylistService _playlistService;
         private readonly IWebHostEnvironment _environment;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public SongsController(ISongService songService, IAlbumService albumService,
-            IArtistService artistService, IWebHostEnvironment environment,
+            IArtistService artistService, IPlaylistService playlistService, IWebHostEnvironment environment,
             UserManager<ApplicationUser> userManager)
         {
             _songService = songService;
             _albumService = albumService;
             _artistService = artistService;
+            _playlistService = playlistService;
             _environment = environment;
             _userManager = userManager;
         }
 
-        // Everyone can view all songs
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var songs = await _songService.GetAllSongsAsync();
             if (User.Identity?.IsAuthenticated == true)
-                ViewBag.CurrentUserId = _userManager.GetUserId(User);
+            {
+                var userId = _userManager.GetUserId(User);
+                ViewBag.CurrentUserId = userId;
+                
+                var allPlaylists = await _playlistService.GetAllPlaylistsAsync();
+                if (User.IsInRole("Admin"))
+                {
+                    ViewBag.UserPlaylists = allPlaylists.ToList();
+                }
+                else
+                {
+                    ViewBag.UserPlaylists = allPlaylists.Where(p => p.UserId == userId).ToList();
+                }
+            }
             return View(songs);
         }
 
@@ -41,14 +55,29 @@ namespace MusicfyWebApp.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Search(string searchTerm)
         {
+            IEnumerable<Song> songs;
             if (string.IsNullOrWhiteSpace(searchTerm))
             {
-                var allSongs = await _songService.GetAllSongsAsync();
-                return Json(allSongs);
+                songs = await _songService.GetAllSongsAsync();
+            }
+            else
+            {
+                songs = await _songService.SearchSongsAsync(searchTerm);
             }
 
-            var filteredSongs = await _songService.SearchSongsAsync(searchTerm);
-            return Json(filteredSongs);
+            // We project the Song entities into a lightweight anonymous type to avoid 
+            // 'System.Text.Json.JsonException' object cycle errors. EF Core entities often 
+            // have nested navigation properties (e.g., Song -> Artist -> Songs) which break JSON serialization.
+            var result = songs.Select(s => new {
+                songId = s.SongId,
+                title = s.Title,
+                length = s.Length,
+                audioUrl = s.AudioUrl,
+                album = s.Album != null ? new { title = s.Album.Title } : null,
+                artist = s.Artist != null ? new { name = s.Artist.Name } : null
+            });
+
+            return Json(result);
         }
 
         // Both Admin and User can create songs
@@ -127,6 +156,9 @@ namespace MusicfyWebApp.Controllers
             if (existingSong == null || !CanModifySong(existingSong))
                 return RedirectToAction("AccessDenied", "Account");
 
+            // We manually update properties on the 'existingSong' (which is already tracked by EF Core)
+            // instead of updating the 'song' parameter directly. This prevents an InvalidOperationException 
+            // that occurs if two instances with the same ID are tracked simultaneously.
             existingSong.Title = song.Title;
             existingSong.Length = song.Length;
             existingSong.AlbumId = song.AlbumId;

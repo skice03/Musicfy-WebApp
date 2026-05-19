@@ -69,6 +69,39 @@
                         {
                             <button class="btn btn-sm btn-outline-secondary me-1" disabled>No Audio</button>
                         }
+                        
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <div class="dropdown d-inline-block me-1">
+                                <button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    + Playlist
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    @if (ViewBag.UserPlaylists != null)
+                                    {
+                                        var playlists = (IEnumerable<MusicfyWebApp.Models.Playlist>)ViewBag.UserPlaylists;
+                                        if (playlists.Any())
+                                        {
+                                            foreach (var playlist in playlists)
+                                            {
+                                                <li>
+                                                    <form asp-controller="Playlists" asp-action="AddSong" method="post" class="m-0 p-0">
+                                                        <input type="hidden" name="playlistId" value="@playlist.PlaylistId" />
+                                                        <input type="hidden" name="songId" value="@item.SongId" />
+                                                        <button type="submit" class="dropdown-item text-white border-0 w-100 text-start" style="background:transparent;">@playlist.Title</button>
+                                                    </form>
+                                                </li>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <li><span class="dropdown-item text-muted">No playlists available</span></li>
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        }
+
                         @{
                             var currentUserId = ViewBag.CurrentUserId as string;
                             var canModify = User.IsInRole("Admin") || (item.UserId != null && item.UserId == currentUserId);
@@ -103,11 +136,21 @@
     </div>
 </div>
 
+<div id="csrf-token-container" style="display:none;">@Html.AntiForgeryToken()</div>
+
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
             
         var originalTableContent = $("#songsTableBody").html();
+        var csrfTokenHtml = $("#csrf-token-container").html();
+        
+        // We select only the needed properties to serialize instead of the entire Playlist object.
+        // This prevents 'JsonException: A possible object cycle was detected' caused by Entity Framework's
+        // nested navigation properties (e.g. Playlist -> User -> Playlists).
+        var userPlaylists = @Html.Raw(Json.Serialize(((IEnumerable<MusicfyWebApp.Models.Playlist>)ViewBag.UserPlaylists ?? new List<MusicfyWebApp.Models.Playlist>()).Select(p => new { playlistId = p.PlaylistId, title = p.Title })));
+        
+        var isAuthenticated = @(User.Identity != null && User.Identity.IsAuthenticated ? "true" : "false");
 
         // AJAX Search
         $("#searchBox").on("keyup", function () {
@@ -139,12 +182,34 @@
                             ? '<button class="btn btn-sm btn-outline-success me-1 btn-play-song" data-audio-url="' + audioUrl + '" data-song-title="' + song.title + '" data-song-artist="' + artistDisplay + '">▶ Play</button>'
                             : '<button class="btn btn-sm btn-outline-secondary me-1" disabled>No Audio</button>';
 
+                        var addPlaylistBtn = "";
+                        if (isAuthenticated) {
+                            addPlaylistBtn = '<div class="dropdown d-inline-block me-1">' +
+                                '<button class="btn btn-sm btn-outline-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">+ Playlist</button>' +
+                                '<ul class="dropdown-menu dropdown-menu-dark">';
+                            if (userPlaylists.length > 0) {
+                                $.each(userPlaylists, function(i, p) {
+                                    addPlaylistBtn += '<li>' +
+                                        '<form action="/Playlists/AddSong" method="post" class="m-0 p-0">' +
+                                        csrfTokenHtml +
+                                        '<input type="hidden" name="playlistId" value="' + p.playlistId + '" />' +
+                                        '<input type="hidden" name="songId" value="' + song.songId + '" />' +
+                                        '<button type="submit" class="dropdown-item text-white border-0 w-100 text-start" style="background:transparent;">' + p.title + '</button>' +
+                                        '</form>' +
+                                        '</li>';
+                                });
+                            } else {
+                                addPlaylistBtn += '<li><span class="dropdown-item text-muted">No playlists available</span></li>';
+                            }
+                            addPlaylistBtn += '</ul></div>';
+                        }
+
                         var row = '<tr>' +
                             '<td class="fw-bold text-white">' + song.title + '</td>' +
                             '<td class="text-light">' + artistDisplay + '</td>' +
                             '<td>' + (song.length || '-') + '</td>' +
                             '<td style="color: #1DB954;">' + albumDisplay + '</td>' +
-                            '<td>' + playBtn + '</td>' +
+                            '<td>' + playBtn + addPlaylistBtn + '</td>' +
                             '</tr>';
                         $("#songsTableBody").append(row);
                     });

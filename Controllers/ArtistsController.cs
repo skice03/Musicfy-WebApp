@@ -42,7 +42,7 @@ namespace MusicfyWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([Bind("ArtistId,Name,Bio")] Artist artist, IFormFile? ImageFile)
+        public async Task<IActionResult> Create([Bind("ArtistId,Name,Bio,IsVerified")] Artist artist, IFormFile? ImageFile)
         {
             if (ImageFile != null && ImageFile.Length > 0)
             {
@@ -69,7 +69,7 @@ namespace MusicfyWebApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("ArtistId,Name,Bio,ImageUrl")] Artist artist, IFormFile? ImageFile)
+        public async Task<IActionResult> Edit(int id, [Bind("ArtistId,Name,Bio,ImageUrl,IsVerified")] Artist artist, IFormFile? ImageFile)
         {
             if (id != artist.ArtistId) return NotFound();
 

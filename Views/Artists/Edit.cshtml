@@ -25,7 +25,12 @@
                     <textarea asp-for="Bio" class="form-control bg-dark text-white border-secondary" rows="3"></textarea>
                     <span asp-validation-for="Bio" class="text-danger"></span>
                 </div>
-
+                <div class="mb-3 form-check">
+                    <input class="form-check-input" asp-for="IsVerified" />
+                    <label class="form-check-label text-white d-flex align-items-center" asp-for="IsVerified">
+                        Official Verified Artist <i class="bi bi-patch-check-fill text-primary ms-2 fs-5"></i>
+                    </label>
+                </div>
                 <div class="mb-3">
                     <label class="form-label">Artist Photo</label>
                     @if (!string.IsNullOrEmpty(Model.ImageUrl))
