@@ -65,7 +65,7 @@ namespace MusicfyWebApp.Controllers
 
             ViewBag.CanModify = isOwner || User.IsInRole("Admin");
 
-            // For Add Song dropdown — get all songs (platform + user's own)
+            // For Add Song dropdown, get all songs (platform + user's own)
             if (ViewBag.CanModify == true)
             {
                 var allSongs = await _songService.GetAllSongsAsync();
@@ -169,7 +169,7 @@ namespace MusicfyWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // --- Add / Remove songs from playlist ---
+        // Add / Remove songs from playlist 
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -192,7 +192,6 @@ namespace MusicfyWebApp.Controllers
             }
 
             // Redirect back to the page the user came from (e.g., Songs Index or Playlist Details)
-            // This prevents a jarring redirect and keeps the user in their current workflow without reloading the whole app structure.
             var referer = Request.Headers["Referer"].ToString();
             if (!string.IsNullOrEmpty(referer))
             {

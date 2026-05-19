@@ -119,7 +119,7 @@ namespace MusicfyWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // --- Helper Methods ---
+        // Helper Methods 
 
         private async Task<bool> ArtistExists(int id)
         {

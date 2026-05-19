@@ -65,9 +65,7 @@ namespace MusicfyWebApp.Controllers
                 songs = await _songService.SearchSongsAsync(searchTerm);
             }
 
-            // We project the Song entities into a lightweight anonymous type to avoid 
-            // 'System.Text.Json.JsonException' object cycle errors. EF Core entities often 
-            // have nested navigation properties (e.g., Song -> Artist -> Songs) which break JSON serialization.
+            // Song entities into a lightweight anonymous type to avoid 'System.Text.Json.JsonException' object cycle errors.
             var result = songs.Select(s => new {
                 songId = s.SongId,
                 title = s.Title,
@@ -99,7 +97,7 @@ namespace MusicfyWebApp.Controllers
                 song.AudioUrl = await SaveAudioFile(AudioFile);
             }
 
-            // Set ownership — Admin songs have no UserId (platform songs)
+            // Set ownership, Admin songs have no UserId (platform songs)
             var user = await _userManager.GetUserAsync(User);
             if (user != null && !User.IsInRole("Admin"))
             {
@@ -156,9 +154,6 @@ namespace MusicfyWebApp.Controllers
             if (existingSong == null || !CanModifySong(existingSong))
                 return RedirectToAction("AccessDenied", "Account");
 
-            // We manually update properties on the 'existingSong' (which is already tracked by EF Core)
-            // instead of updating the 'song' parameter directly. This prevents an InvalidOperationException 
-            // that occurs if two instances with the same ID are tracked simultaneously.
             existingSong.Title = song.Title;
             existingSong.Length = song.Length;
             existingSong.AlbumId = song.AlbumId;
@@ -208,7 +203,7 @@ namespace MusicfyWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // --- Helper Methods ---
+        // Helper Methods
 
         private bool CanModifySong(Song song)
         {

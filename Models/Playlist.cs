@@ -8,7 +8,7 @@ namespace MusicfyWebApp.Models
         public string? ImageUrl { get; set; }
         public bool IsPublic { get; set; }
 
-        // User Reference (whoever made the playlist) - now using Identity string IDs
+        // User Reference (whoever made the playlist) using Identity string IDs
         public string? UserId { get; set; }
         public ApplicationUser? User { get; set; }
 

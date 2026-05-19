@@ -18,7 +18,7 @@ namespace MusicfyWebApp.Models
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder); // Required for Identity tables
+            base.OnModelCreating(builder); // for identity tables
         }
     }
 }

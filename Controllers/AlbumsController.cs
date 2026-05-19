@@ -120,7 +120,7 @@ namespace MusicfyWebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // --- Helper Methods ---
+        // Helper Methods 
 
         private async Task<string> SaveImageFile(IFormFile file)
         {

@@ -146,8 +146,6 @@
         var csrfTokenHtml = $("#csrf-token-container").html();
         
         // We select only the needed properties to serialize instead of the entire Playlist object.
-        // This prevents 'JsonException: A possible object cycle was detected' caused by Entity Framework's
-        // nested navigation properties (e.g. Playlist -> User -> Playlists).
         var userPlaylists = @Html.Raw(Json.Serialize(((IEnumerable<MusicfyWebApp.Models.Playlist>)ViewBag.UserPlaylists ?? new List<MusicfyWebApp.Models.Playlist>()).Select(p => new { playlistId = p.PlaylistId, title = p.Title })));
         
         var isAuthenticated = @(User.Identity != null && User.Identity.IsAuthenticated ? "true" : "false");

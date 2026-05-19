@@ -7,7 +7,7 @@ namespace MusicfyWebApp.Models
         // Profile picture path
         public string? ProfileImageUrl { get; set; }
 
-        // User can have multiple playlists (Collection Navigation Property)
+        // User can have multiple playlists
         public ICollection<Playlist>? Playlists { get; set; }
     }
 }
