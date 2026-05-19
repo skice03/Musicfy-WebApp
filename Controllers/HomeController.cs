@@ -30,10 +30,18 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Library()
     {
+        var allPlaylists = await _playlistService.GetAllPlaylistsAsync();
+        var allAlbums = await _albumService.GetAllAlbumsAsync();
+        var user = await _userManager.GetUserAsync(User);
+
+        var visiblePlaylists = allPlaylists
+            .Where(p => p.IsPublic || (user != null && p.UserId == user.Id))
+            .ToList();
+
         var viewModel = new LibraryViewModel
         {
-            Albums = await _albumService.GetAllAlbumsAsync(),
-            Playlists = await _playlistService.GetAllPlaylistsAsync()
+            Albums = allAlbums,
+            Playlists = visiblePlaylists
         };
         return View(viewModel);
     }

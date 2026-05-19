@@ -127,26 +127,28 @@ namespace MusicfyWebApp.Controllers
             if (existingSong == null || !CanModifySong(existingSong))
                 return RedirectToAction("AccessDenied", "Account");
 
+            existingSong.Title = song.Title;
+            existingSong.Length = song.Length;
+            existingSong.AlbumId = song.AlbumId;
+            existingSong.ArtistId = song.ArtistId;
+
             if (AudioFile != null && AudioFile.Length > 0)
             {
                 DeleteAudioFile(existingSong.AudioUrl);
-                song.AudioUrl = await SaveAudioFile(AudioFile);
+                existingSong.AudioUrl = await SaveAudioFile(AudioFile);
             }
-
-            // Preserve original ownership
-            song.UserId = existingSong.UserId;
 
             if (ModelState.IsValid)
             {
-                await _songService.UpdateSongAsync(song);
+                await _songService.UpdateSongAsync(existingSong);
                 return RedirectToAction(nameof(Index));
             }
 
             var albums = await _albumService.GetAllAlbumsAsync();
-            ViewBag.AlbumId = new SelectList(albums, "AlbumId", "Title", song.AlbumId);
+            ViewBag.AlbumId = new SelectList(albums, "AlbumId", "Title", existingSong.AlbumId);
             var artists = await _artistService.GetAllArtistsAsync();
-            ViewBag.ArtistId = new SelectList(artists, "ArtistId", "Name", song.ArtistId);
-            return View(song);
+            ViewBag.ArtistId = new SelectList(artists, "ArtistId", "Name", existingSong.ArtistId);
+            return View(existingSong);
         }
 
         public async Task<IActionResult> Delete(int? id)

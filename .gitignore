@@ -12,5 +12,15 @@
 # ignore the created db file 
 musicfy.db
 
+# ignore image and audio files 
+wwwroot/audio/
+wwwroot/images/albums/
+wwwroot/images/artists/
+wwwroot/images/playlists/
+wwwroot/images/profiles/
+
 # misc
 /docs/
+
+# vs code
+.vscode/
